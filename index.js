@@ -3,24 +3,57 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
+require('dotenv').config();
 
+
+// middleware
 app.use(cors());
+app.use(express.json());
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.jqheb6c.mongodb.net/?retryWrites=true&w=majority`;
+console.log(uri)
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+
+async function run() {
+
+    try {
+        const blogsCollection = client.db("CleanExpressDB").collection("blogs");
+        const servicesCollection = client.db("CleanExpressDB").collection("services");
+
+        app.get('/blogs', async (req, res) => {
+            const query = {};
+            const cursor = blogsCollection.find(query);
+            const blogs = await cursor.toArray();
+            res.send(blogs);
+
+        })
+
+        app.get('/services', async (req, res) => {
+            const query = {};
+            const cursor = servicesCollection.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+
+        })
+
+    }
+    finally {
+
+    }
+
+
+}
+run().catch(err => console.log(err));
+
+
+
+
+
 
 app.get('/', (req, res) => {
     res.send('Slean Service Api Running')
 })
-
-// username: cleanDBUser
-// pass: xnsP3pTJl3Qjz6lT
-
-
-
-const uri = "mongodb+srv://cleanDBUser:xnsP3pTJl3Qjz6lT@cluster0.jqheb6c.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
-
-
-
 
 
 app.listen(port, () => {
