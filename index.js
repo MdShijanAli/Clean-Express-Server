@@ -188,7 +188,7 @@ run().catch(err => console.log(err));
 
 
 app.get('/', (req, res) => {
-    res.send('Slean Service Api Running')
+    res.send('Clean Express Api Running')
 })
 
 
