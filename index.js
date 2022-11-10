@@ -78,7 +78,7 @@ async function run() {
 
         app.get('/home-services', async (req, res) => {
             const query = {};
-            const cursor = servicesCollection.find(query).limit(3);
+            const cursor = servicesCollection.find(query).limit(3).sort({ _id: -01 });
             const services = await cursor.toArray();
             res.send(services);
 
@@ -116,7 +116,7 @@ async function run() {
                     email: req.query.email
                 }
             }
-            const cursor = reviewsCollection.find(query);
+            const cursor = reviewsCollection.find(query).sort({ _id: -01 });
             const reviews = await cursor.toArray();
             res.send(reviews);
 
