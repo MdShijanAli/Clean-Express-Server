@@ -108,7 +108,21 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/reviews', verifyJWT, async (req, res) => {
+        app.get('/reviews', async (req, res) => {
+
+            let query = {};
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = reviewsCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+
+        })
+
+        app.get('/my-reviews', verifyJWT, async (req, res) => {
             const decoded = req.decoded;
             console.log('inside review api', decoded)
             if (decoded.email !== req.query.email) {
